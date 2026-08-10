@@ -1,97 +1,61 @@
-# AP Microeconomics Lecture Notes
+# AP Microeconomics 中文讲义
 
-一份面向国际课程高中生的 AP 微观经济学中文讲义：用清晰的模型、逐步推导和配套图表，把六个单元串成一条可复习、可打印、可继续维护的学习路径。
+一套面向 AP Microeconomics 学习者的中文开源讲义。内容按课程路径拆成独立章节，保留关键英文术语、模型推导、39 张经济学图表、60 道单元选择题、配套 FRQ 与逐题解析。
 
-> 本项目是学习辅助材料，不是 College Board 官方出版物，也不代表 College Board 的立场。
+> 本项目是非官方学习材料，与 College Board 无隶属或背书关系。考试日期、形式和政策请以官方页面为准。
 
-## 这份讲义适合谁？
+## 开始阅读
 
-- 正在学习 AP Microeconomics、需要中文解释和英文术语对照的学生
-- 希望从零建立“稀缺性 → 供需 → 成本 → 市场结构 → 要素市场 → 市场失灵”知识链的学习者
-- 需要通过图形、公式和练习题反复训练 AP FRQ/MCQ 基础技能的课堂或自学者
-
-## 内容结构
-
-| 单元 | 主题 | 核心内容 |
+| 章节 | 主题 | 主要内容 |
 | --- | --- | --- |
-| Unit 1 | Basic Economic Concepts | 稀缺性、机会成本、PPC、比较优势、边际分析、消费者选择 |
-| Unit 2 | Supply and Demand | 供需、均衡、弹性、政府干预、福利、国际贸易 |
-| Unit 3 | Production, Cost & Perfect Competition | 生产函数、成本曲线、完全竞争、短期与长期决策 |
-| Unit 4 | Imperfect Competition | 垄断、价格歧视、自然垄断、垄断竞争、寡头与博弈论 |
-| Unit 5 | Factor Markets | 派生需求、MRP、劳动市场、买方垄断、最低工资 |
-| Unit 6 | Market Failure & Role of Government | 外部性、公共品、公共资源、收入分配与政府政策 |
+| 00 | [课程与考试概览](lecture/00-课程介绍.md) | 考试结构、计分与学习导航 |
+| 01 | [基本经济概念](lecture/01-基本经济概念.md) | 稀缺性、机会成本、PPC、比较优势、消费者选择 |
+| 02 | [供给与需求](lecture/02-供给与需求.md) | 市场均衡、弹性、政府干预、福利与国际贸易 |
+| 03 | [生产、成本与完全竞争](lecture/03-生产成本与完全竞争.md) | 生产函数、成本曲线、短期决策与长期均衡 |
+| 04 | [不完全竞争](lecture/04-不完全竞争.md) | 垄断、价格歧视、垄断竞争、寡头与博弈论 |
+| 05 | [要素市场](lecture/05-要素市场.md) | MRP、竞争性劳动市场、买方垄断与最低工资 |
+| 06 | [市场失灵与政府作用](lecture/06-市场失灵与政府作用.md) | 外部性、公共品、公共资源与收入分配 |
+| 07 | [练习题答案与解析](lecture/07-练习题答案.md) | 六个单元全部 MCQ 与 FRQ 的对应答案 |
 
-每个单元都配有图形化讲解和练习；主讲义末尾集中提供答案与解析。另有一份[补充练习题](./补充练习题.md)，包含 30 道 MCQ 和 2 道 FRQ。
+推荐从 00 章顺序学习；复习时可直接进入对应单元，并在完成单元末练习后打开答案章核对。题目与答案使用相同的单元和题号组织。
 
-## 图表与输出
+## 讲义特色
 
-`charts/` 中包含 39 张现有 PNG 图表，覆盖 PPC、供需、税收、关税、成本曲线、市场结构、要素市场和外部性等 AP 常见模型；`generate_svg_charts.py` 可另行生成 SVG 版本。讲义源文件通过 Markdown、Pandoc 和 GitHub 风格样式生成：
+- 中文解释配合标准英文术语，适合入门和考前复习。
+- 从定义、数值例子到图形结论逐步推导，明确模型成立的前提。
+- 每个知识单元后直接附练习，不需要在多个题库文件之间跳转。
+- 图表脚本与 Markdown 源文件均可维护；HTML/PDF 仅作为本地构建产物，不纳入仓库。
 
-```text
-AP微观经济学讲义.md
-        │
-        ├── generate_charts.py ──> charts/*.png
-        ├── github-style/ + style.css
-        └── build.py ──> AP微观经济学讲义.html ──> AP微观经济学讲义.pdf
-```
+## 本地构建
 
-## 快速开始
-
-### 环境要求
-
-- Python 3
-- Pandoc
-- Chrome 或 Edge（可选，用于自动导出 PDF）
-- Python 依赖：`numpy`、`matplotlib`；运行 `generate_ppt.py` 时还需要 `python-pptx`
-
-### 构建讲义
-
-在仓库根目录运行：
+需要 Python 3、Pandoc、`numpy`、`matplotlib`，以及可选的 Chrome/Edge（用于自动导出 PDF）。
 
 ```powershell
 python build.py
 ```
 
-也可以单独运行：
+构建脚本按上表顺序拼接八个模块，重新生成图表并输出本地 `AP微观经济学讲义.html`；检测到 Chromium 浏览器时还会生成本地 PDF。发布前可运行结构与题目映射检查：
 
 ```powershell
-python generate_charts.py       # 生成 PNG 图表
-python generate_svg_charts.py   # 生成 SVG 图表
+python verify_repository.py
 ```
 
-构建完成后，HTML 和 PDF 输出会出现在仓库根目录；这两个派生文件默认不纳入 Git，避免提交与源文件不同步的构建产物。若本机没有 Chrome/Edge，脚本仍会生成 HTML，并提示手动打印 PDF。
-
-## 文件导航
+## 项目结构
 
 ```text
 micro/
-├── AP微观经济学讲义.md       # 讲义唯一主源文件
-├── 补充练习题.md              # 补充题库及答案
-├── charts/                    # 图表资产
-├── build.py                   # Markdown → HTML → PDF
-├── generate_charts.py         # PNG 图表生成脚本
-├── generate_svg_charts.py     # SVG 图表生成脚本
-├── github-style/              # GitHub 风格 HTML 样式
-├── style.css                  # 项目样式补充
-└── AGENTS.md                  # 项目维护与构建约定
+├── lecture/                    # 八个可独立阅读的讲义模块
+├── charts/                     # 讲义引用的 PNG 图表
+├── github-style/               # GitHub 风格的 HTML/打印样式
+├── build.py                    # 分章 Markdown → HTML → 本地 PDF
+├── verify_repository.py        # 章节、题目、答案和资源完整性检查
+├── generate_charts.py          # PNG 图表生成脚本
+├── generate_svg_charts.py      # SVG 图表生成脚本
+└── style.css                   # 补充样式
 ```
 
-## 内容审查范围
+## 内容可靠性与贡献
 
-本项目维护时应同时检查：
+本版已对六个单元的概念、公式、数值例题、60 道 MCQ、FRQ 小问及答案映射进行交叉检查。经济模型高度依赖假设；如发现问题，欢迎提交具体章节、题号、推导或权威来源。涉及内容修改时，请同时检查题干与答案；涉及图表时，请重新运行构建并确认标签与模型一致。
 
-1. 概念、公式、图形和模型假设是否一致；
-2. 每道练习题的题干数据是否足以推出答案；
-3. MCQ 答案键、FRQ 小问和答案解析是否一一对应；
-4. 生成的 HTML/PDF 是否保留中文、数学公式、图表和分页布局；
-5. 时效性考试信息是否仍与 College Board 官方页面一致。
-
-## 官方资料
-
-- [AP Microeconomics Exam — AP Central](https://apcentral.collegeboard.org/courses/ap-microeconomics/exam)
-- [AP Microeconomics Assessment — AP Students](https://apstudents.collegeboard.org/courses/ap-microeconomics/assessment)
-- [AP Microeconomics Score Distributions](https://apstudents.collegeboard.org/about-ap-scores/score-distributions/ap-microeconomics)
-
-## 贡献建议
-
-欢迎提交针对具体行号、公式、图形或题目答案的改进建议。涉及知识内容的修改，请同时说明适用条件和可核验来源；涉及图表的修改，请附上重新生成后的图表或构建结果。提交前请运行 `python build.py`，并确认没有把本地依赖、临时文件或官方原题 PDF 纳入提交。
+官方参考：[AP Microeconomics Course](https://apcentral.collegeboard.org/courses/ap-microeconomics)、[Exam Assessment](https://apstudents.collegeboard.org/courses/ap-microeconomics/assessment)、[Score Distributions](https://apstudents.collegeboard.org/about-ap-scores/score-distributions/ap-microeconomics)。

@@ -406,19 +406,21 @@ def u2_elasticity_five():
               'Perfectly Elastic\nPED = ∞', 'Total Revenue Test']
     x = np.linspace(0, 5, 100)
     curves = [
-        ('v', None), ('steep', None), ('curve', None),
-        ('flat', None), ('h', None), ('text', None)
+        ('v', None), ('iso', 0.5), ('iso', 1.0),
+        ('iso', 2.0), ('h', None), ('text', None)
     ]
-    for ax, title, (ctype, _) in zip(axes.flat, titles, curves):
+    for ax, title, (ctype, elasticity) in zip(axes.flat, titles, curves):
         ax.set_xlim(0,5); ax.set_ylim(0,5)
         for sp in ax.spines.values(): sp.set_visible(False)
         ax.set_xticks([]); ax.set_yticks([])
         ax.annotate('', xy=(5,0), xytext=(0,0), arrowprops=dict(arrowstyle='-|>',color=C['AXIS'],lw=1.2))
         ax.annotate('', xy=(0,5), xytext=(0,0), arrowprops=dict(arrowstyle='-|>',color=C['AXIS'],lw=1.2))
         if ctype == 'v': ax.plot([2.5,2.5],[0.3,4.7], color=C['D'], lw=3)
-        elif ctype == 'steep': ax.plot([1,4],[4.5,1], color=C['D'], lw=3)
-        elif ctype == 'curve': ax.plot(np.linspace(0.95,4.7,100), 4.0/np.linspace(0.95,4.7,100), color=C['D'], lw=3)
-        elif ctype == 'flat': ax.plot([0.5,4.5],[4,1], color=C['D'], lw=3)
+        elif ctype == 'iso':
+            p_min = 0.8 if elasticity <= 1 else 1.85
+            p = np.linspace(p_min, 4.6, 160)
+            quantity = 2.5 * (2.5 / p) ** elasticity
+            ax.plot(quantity, p, color=C['D'], lw=3)
         elif ctype == 'h': ax.plot([0.3,4.7],[3,3], color=C['D'], lw=3)
         elif ctype == 'text':
             ax.text(2.5, 4.2, 'TR Test', ha='center', fontsize=11, fontweight='bold', color=C['S'])
@@ -426,7 +428,7 @@ def u2_elasticity_five():
             ax.text(2.5, 2.6, 'Price and TR move opposite: Elastic', ha='center', fontsize=9, color=C['TEXT'])
             ax.text(2.5, 1.9, 'TR unchanged: Unit Elastic', ha='center', fontsize=9, color=C['TEXT'])
             ax.plot([1,4],[1.3,1.3], color='#BFDBFE', lw=0.8)
-            ax.text(2.5, 0.9, 'Flatter = More Elastic', ha='center', fontsize=LABEL_FONTSIZE, color=C['MUTE'])
+            ax.text(2.5, 0.9, 'Slope ≠ Elasticity', ha='center', fontsize=LABEL_FONTSIZE, color=C['MUTE'])
         ax.set_title(title, fontsize=LABEL_FONTSIZE, fontweight='bold', color=C['TEXT'], pad=4)
     fig.tight_layout(pad=1.0)
     save(fig, 'u2_elasticity_five.png')
@@ -753,7 +755,7 @@ def u3_lratc():
     ax.plot(q, lratc, color=C['MR'], lw=3)
     label_at(ax, 10.8, 0.85 + 0.04*(10.8-6.1)**2, 'LRATC', C['MR'], dx=18, dy=8)
     ax.text(2.4, 2.9, 'Economies\nof Scale', color=C['MC'], fontsize=LABEL_FONTSIZE, fontweight='bold', ha='center')
-    ax.text(6.1, 2.9, 'Constant\nReturns', color=C['TEXT'], fontsize=LABEL_FONTSIZE, fontweight='bold', ha='center')
+    ax.text(6.1, 2.9, 'Minimum LRATC\nEfficient Scale', color=C['TEXT'], fontsize=LABEL_FONTSIZE, fontweight='bold', ha='center')
     ax.text(9.6, 2.9, 'Diseconomies\nof Scale', color=C['ALERT'], fontsize=LABEL_FONTSIZE, fontweight='bold', ha='center')
     setup_axes(ax, 'Quantity', 'Cost', (0,12), (0,4.2))
     save(fig, 'u3_lratc.png')
@@ -944,12 +946,12 @@ def u4_price_discrim():
     pt(ax, qstar, pstar, C['MC'], None)
     dashed_v(ax, qstar, 0, pstar, C['DASH'])
     dashed_h(ax, pstar, 0, qstar, C['DASH'])
-    ax.text(-0.5, pstar, 'P*', ha='right', va='center', fontsize=10, color=C['MUTE'], fontweight='bold')
+    ax.text(-0.5, pstar, 'P(Q*)=MC', ha='right', va='center', fontsize=9, color=C['MUTE'], fontweight='bold')
     q_label(ax, qstar, 'Q*')
     qfill = np.linspace(0, qstar, 200)
     ax.fill_between(qfill, 1 + 0.8*qfill, 10 - qfill,
                     alpha=0.15, color=C['PROFIT'])
-    ax.text(2.5, 6.0, 'All CS → Profit', color=C['MC'], fontsize=10, fontweight='bold', ha='center', va='center')
+    ax.text(2.5, 6.0, 'PS = Total Surplus', color=C['MC'], fontsize=10, fontweight='bold', ha='center', va='center')
     ax.text(2.5, 4.0, 'DWL = 0', color=C['MC'], fontsize=10, fontweight='bold', ha='center', va='center')
     setup_axes(ax, 'Quantity', 'Price', (0,11), (0,11))
     save(fig, 'u4_price_discrim.png')
@@ -1091,7 +1093,7 @@ def u4_natural_monopoly():
     qc = np.linspace(0.6, 10, 280)
     d = 12 - q; mr = 12 - 2*q; mc_const = 2.0
     mc = np.full_like(q, mc_const)
-    atc = 14/qc + 2 + 0.1*qc
+    atc = 14/qc + 2
     ax.plot(q, d, color=C['D'], lw=2.5)
     ax.plot(q, mr, color=C['MR'], lw=2, ls='--')
     ax.plot(q, mc, color=C['MC'], lw=2.5)
@@ -1100,11 +1102,11 @@ def u4_natural_monopoly():
     label_at(ax, 4.9, 12-2*4.9, 'MR', C['MR'], dx=-35, dy=12, ha='right', fontsize=10)
     label_curve_end(ax, 9.8, mc_const, 'MC', C['MC'], dx=20, dy=-20, ha='center')
     # 1. Unregulated monopoly: MR=MC → 12-2Q = 2 → Q_m = 5
-    qm = 5.0; pm = 12 - qm; atc_qm = 14/qm + 2 + 0.1*qm
+    qm = 5.0; pm = 12 - qm; atc_qm = 14/qm + 2
     # Pre-compute qac for ATC label alignment
-    qac = (10 + np.sqrt(100 - 61.6))/2.2
+    qac = (10 + np.sqrt(44))/2
     # ATC label at the right end of the ATC curve, vertically aligned with D=AR and MC
-    label_curve_end(ax, 9.8, 14/9.8 + 2 + 0.1*9.8, 'ATC', C['ATC'], dx=20, dy=0, ha='center')
+    label_curve_end(ax, 9.8, 14/9.8 + 2, 'ATC', C['ATC'], dx=20, dy=0, ha='center')
     pt(ax, qm, pm, C['D'], None)
     pt(ax, qm, atc_qm, C['ATC'], None)
     dashed_v(ax, qm, 0, pm, C['DASH'])
@@ -1115,7 +1117,7 @@ def u4_natural_monopoly():
     ax.text(qm*0.5, (pm+atc_qm)/2, 'Profit', ha='center', va='center',
             color=C['PROFIT'], fontsize=9, fontweight='bold',
             bbox=dict(boxstyle='round,pad=0.14', fc='white', ec='none', alpha=0.72))
-    # 2. Fair-return (AC) pricing: D=ATC → 12-Q = 14/Q + 2 + 0.1Q → 10 = 1.1Q + 14/Q → 1.1Q² - 10Q + 14 = 0
+    # 2. Fair-return pricing: D=ATC → 12-Q = 14/Q + 2 → Q² - 10Q + 14 = 0
     pac = 12 - qac
     pt(ax, qac, pac, C['ATC'], None)
     label_at(ax, qac, pac, 'Fair-Return', C['ATC'], dx=10, dy=8, fontsize=9)

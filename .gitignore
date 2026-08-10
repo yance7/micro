@@ -17,6 +17,12 @@ AP微观经济学讲义.pdf
 micro_review*.md
 对话上下文总结.md
 slides/
+AGENTS.md
+docs/
+superpower/
+superpowers/
+.agents/
+.codex/
 
 # Downloaded College Board source PDFs
 ap*-frq-set*.pdf

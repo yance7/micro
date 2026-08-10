@@ -7,7 +7,16 @@ import os, sys, shutil, subprocess, glob
 ROOT = os.path.dirname(os.path.abspath(__file__))
 os.chdir(ROOT)
 
-MD = os.path.join(ROOT, 'AP微观经济学讲义.md')
+MODULES = [
+    'lecture/00-课程介绍.md',
+    'lecture/01-基本经济概念.md',
+    'lecture/02-供给与需求.md',
+    'lecture/03-生产成本与完全竞争.md',
+    'lecture/04-不完全竞争.md',
+    'lecture/05-要素市场.md',
+    'lecture/06-市场失灵与政府作用.md',
+    'lecture/07-练习题答案.md',
+]
 CSS = os.path.join(ROOT, 'style.css')
 HTML = os.path.join(ROOT, 'AP微观经济学讲义.html')
 PDF = os.path.join(ROOT, 'AP微观经济学讲义.pdf')
@@ -27,10 +36,16 @@ print('  Charts done (PNG).')
 step('[2/3] Markdown -> HTML (pandoc)...')
 
 # pandoc has encoding issues with Chinese paths on Windows;
-# copy to temp ASCII name, run pandoc, copy back.
+# concatenate the ordered modules to an ASCII temporary name for pandoc.
 temp_md = os.path.join(ROOT, '_temp_lecture.md')
 temp_html = os.path.join(ROOT, '_temp_lecture.html')
-shutil.copy2(MD, temp_md)
+with open(temp_md, 'w', encoding='utf-8', newline='\n') as output:
+    for index, module in enumerate(MODULES):
+        if index:
+            output.write('\n\n')
+        with open(os.path.join(ROOT, module), encoding='utf-8') as source:
+            output.write(source.read().rstrip())
+        output.write('\n')
 
 gh = 'github-style'
 gh_css = ['github-markdown-light.css', 'custom.css', 'print.css']
