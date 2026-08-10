@@ -1,0 +1,89 @@
+/* 打印 / PDF 优化：保留 GitHub 背景色 + 合理分页 */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm 15mm 18mm 15mm;
+    @bottom-center {
+      content: counter(page) "/" counter(pages);
+      font-size: 12px;
+      color: #818b98;
+    }
+  }
+  @page :first {
+    margin: 20mm 15mm;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* PDF 里去掉容器内边距，由 @page 边距接管，文本更宽 */
+  .markdown-body {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* 目录独立一页 */
+  nav#TOC {
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  /* 目录条目右侧显示目标页码（CSS Paged Media） */
+  nav#TOC ul a::after {
+    content: target-counter(attr(href url), page);
+    float: right;
+    color: #818b98;
+    font-size: 0.9em;
+  }
+
+  /* 每个 H1（大单元）尽量新起一页 */
+  h1 {
+    page-break-before: always;
+    page-break-after: avoid;
+  }
+  h1:first-of-type {
+    page-break-before: avoid;
+  }
+  h2, h3, h4, h5 {
+    page-break-after: avoid;
+  }
+
+  /* 这些元素不跨页截断 */
+  img, table, pre, blockquote, figure, .katex-display {
+    page-break-inside: avoid;
+  }
+  tr, th, td {
+    page-break-inside: avoid;
+  }
+  thead {
+    display: table-header-group;
+  }
+
+  /* MCQ选项：打印时也保持小写字母 */
+  .markdown-body ol ol,
+  .markdown-body ul ol,
+  ol ol,
+  ul ol {
+    list-style-type: lower-alpha !important;
+  }
+
+  /* 表格行高统一：打印时表头与数据行使用相同 padding */
+  .markdown-body table th,
+  .markdown-body table td,
+  table th,
+  table td {
+    padding: 8px 12px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* 去除 Pandoc 在表格单元格内生成的 <p> 标签默认 margin，避免行高不一致 */
+  .markdown-body table th p,
+  .markdown-body table td p,
+  table th p,
+  table td p {
+    margin: 0 !important;
+    text-align: inherit !important;
+  }
+}

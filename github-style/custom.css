@@ -1,0 +1,42 @@
+/* 容器宽度/内边距：按 GitHub 官方使用说明 (980px / 45px) */
+.markdown-body {
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 45px;
+}
+
+body {
+  background-color: #ffffff;
+}
+
+@media (max-width: 767px) {
+  .markdown-body {
+    padding: 15px;
+  }
+}
+
+/* 修复MCQ选项：嵌套有序列表使用小写字母而非罗马数字 */
+.markdown-body ol ol,
+.markdown-body ul ol,
+ol ol,
+ul ol {
+  list-style-type: lower-alpha !important;
+}
+
+/* 表格行高统一：表头与数据行使用相同 padding，确保行高一致 */
+.markdown-body table th,
+.markdown-body table td {
+  padding: 8px 12px;
+  line-height: 1.5;
+}
+
+/* 去除 Pandoc 在表格单元格内生成的 <p> 标签默认 margin，避免行高不一致 */
+.markdown-body table th p,
+.markdown-body table td p,
+table th p,
+table td p {
+  margin: 0 !important;
+  text-align: inherit !important;
+}

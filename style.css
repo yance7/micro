@@ -1,0 +1,325 @@
+/* ═══════════════════════════════════════════════════════════
+   AP Microeconomics 讲义 — GitHub 风 + 打印优化
+   用于 pandoc 生成的 HTML
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+
+:root {
+  --bg: #ffffff;
+  --text: #1f2328;
+  --text-soft: #59636e;
+  --text-muted: #818b98;
+  --link: #0969da;
+  --border: #d1d9e0;
+  --border-soft: #e7eaed;
+  --bg-soft: #f6f8fa;
+  --bg-code: #eff1f3;
+  --green: #1a7f37;
+  --red: #cf222e;
+  --orange: #bc4c00;
+  --blue: #0969da;
+  --purple: #8250df;
+  --max-width: 780px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ══════════ LAYOUT ══════════ */
+.container, body > * {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+body > header, body > nav, body > main, body > footer {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* pandoc wraps content in <main> or section.body */
+main { padding: 40px 24px 80px; }
+
+/* ══════════ TITLE BLOCK ══════════ */
+header.title, .title-block, #title-block-header {
+  text-align: center;
+  padding: 60px 24px 40px;
+  border-bottom: 1px solid var(--border-soft);
+  margin-bottom: 40px;
+}
+header.title h1.title, .title-block h1, #title-block-header h1 {
+  font-family: "Inter", "Noto Sans SC", sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+header.title .subtitle, .title-block .subtitle, #title-block-header .subtitle {
+  font-size: 16px;
+  color: var(--text-soft);
+  margin-bottom: 8px;
+}
+header.title .date, .title-block .date, #title-block-header .date {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ══════════ HEADINGS ══════════ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Inter", "Noto Sans SC", sans-serif;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 800;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+  margin: 48px 0 24px;
+  letter-spacing: -0.3px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 36px 0 16px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 28px 0 12px;
+  color: #24292f;
+}
+
+h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-soft);
+  margin: 20px 0 8px;
+}
+
+h5, h6 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-soft);
+  margin: 16px 0 6px;
+}
+
+/* ══════════ TEXT ══════════ */
+p { margin: 0 0 14px; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+strong { font-weight: 700; }
+
+em { font-style: italic; }
+
+del { color: var(--text-muted); }
+
+/* ══════════ LISTS ══════════ */
+ul, ol { margin: 0 0 14px; padding-left: 28px; }
+li { margin-bottom: 6px; }
+li > ul, li > ol { margin-top: 6px; }
+
+/* 修复MCQ选项：嵌套有序列表使用小写字母而非罗马数字 */
+.markdown-body ol ol,
+.markdown-body ul ol,
+ol ol,
+ul ol {
+  list-style-type: lower-alpha !important;
+}
+
+/* ══════════ BLOCKQUOTE (tip/warn/note) ══════════ */
+blockquote {
+  margin: 16px 0;
+  padding: 12px 18px;
+  border-left: 4px solid var(--border);
+  background: var(--bg-soft);
+  border-radius: 0 6px 6px 0;
+  color: var(--text-soft);
+}
+blockquote p { margin-bottom: 6px; }
+blockquote p:last-child { margin-bottom: 0; }
+blockquote strong { color: var(--text); }
+
+/* ══════════ CODE ══════════ */
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 13.5px;
+  background: var(--bg-code);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--text);
+}
+pre {
+  background: var(--bg-soft);
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+pre code { background: none; padding: 0; font-size: 13px; }
+
+/* ══════════ TABLES ══════════ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  display: block;
+  overflow-x: auto;
+}
+thead { border-bottom: 2px solid var(--border); }
+th {
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+td {
+  padding: 8px 12px;
+  border-top: 1px solid var(--border-soft);
+  color: var(--text);
+}
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+tbody tr:hover { background: #eaeef2; }
+
+/* ══════════ IMAGES ══════════ */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  padding: 12px;
+  background: #fafbfc;
+}
+
+/* ══════════ HORIZONTAL RULE ══════════ */
+hr {
+  height: 1px;
+  border: 0;
+  background: var(--border-soft);
+  margin: 32px 0;
+}
+
+/* ══════════ MATHJAX ══════════ */
+mjx-container { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+mjx-container[display="true"] { margin: 16px 0 !important; }
+
+/* ══════════ TOC (pandoc) ══════════ */
+nav#TOC, #TOC {
+  background: var(--bg-soft);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 20px 28px;
+  margin: 24px 0 40px;
+}
+nav#TOC ul, #TOC ul { list-style: none; padding-left: 0; }
+nav#TOC > ul, #TOC > ul { padding-left: 0; }
+nav#TOC a, #TOC a { color: var(--text); font-weight: 500; font-size: 14.5px; }
+nav#TOC a:hover, #TOC a:hover { color: var(--link); }
+nav#TOC ul ul, #TOC ul ul { padding-left: 20px; margin-top: 4px; }
+nav#TOC ul ul a, #TOC ul ul a { font-weight: 400; font-size: 13.5px; color: var(--text-soft); }
+
+/* ══════════ PRINT ══════════ */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm 15mm 18mm 15mm;
+  }
+  @page :first { margin: 20mm 15mm; }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html, body {
+    font-size: 13.5px;
+    line-height: 1.6;
+    background: #fff;
+  }
+
+  main, body > * {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  /* 标题块 */
+  header.title, .title-block, #title-block-header {
+    page-break-after: always;
+    padding: 80px 20px 40px;
+    border-bottom: none;
+  }
+
+  /* TOC 独立一页 */
+  nav#TOC, #TOC {
+    page-break-after: always;
+    page-break-inside: avoid;
+    box-shadow: none;
+  }
+
+  /* h1 每个大单元尽量新起一页 */
+  h1 {
+    page-break-before: always;
+    page-break-after: avoid;
+    border-bottom: 2px solid var(--border);
+  }
+  h1:first-of-type { page-break-before: avoid; }
+
+  h2, h3, h4 {
+    page-break-after: avoid;
+  }
+
+  /* 图片不跨页 */
+  img {
+    page-break-inside: avoid;
+    border: 1px solid var(--border-soft);
+    background: #fafbfc;
+  }
+
+  /* 表格行不截断 */
+  tr, th, td { page-break-inside: avoid; }
+  thead { display: table-header-group; }
+
+  /* blockquote 不跨页 */
+  blockquote { page-break-inside: avoid; }
+
+  /* 公式不跨页 */
+  mjx-container { page-break-inside: avoid; }
+
+  /* MCQ选项：打印时也保持小写字母 */
+  ol ol { list-style-type: lower-alpha !important; }
+
+  /* 隐藏链接下划线 */
+  a { color: var(--text); text-decoration: none; }
+
+  /* 去掉背景 */
+  body { background: #fff; }
+  blockquote { background: #f6f8fa; }
+  table tbody tr:nth-child(even) { background: #f6f8fa; }
+}

@@ -1,0 +1,22 @@
+# Local dependencies and Python cache
+node_modules/
+__pycache__/
+*.py[cod]
+
+# Build temporaries and local QA output
+_temp_*
+tmp/
+overflow_results*.json
+test_output.html
+
+# Generated lecture exports (rebuild from the Markdown source)
+AP微观经济学讲义.html
+AP微观经济学讲义.pdf
+
+# Internal review and conversation notes
+micro_review*.md
+对话上下文总结.md
+slides/
+
+# Downloaded College Board source PDFs
+ap*-frq-set*.pdf
