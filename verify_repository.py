@@ -50,11 +50,19 @@ FORBIDDEN_PUBLIC_PATTERNS = (
 
 
 def count_numbered_questions(block: str) -> int:
-    return len(re.findall(r"(?m)^\s*\d+\.\s+", block))
+    return len(re.findall(r"(?m)^[ \t]*\d+\.\s+", block))
+
+
+def numbered_question_numbers(block: str) -> list[int]:
+    return [int(value) for value in re.findall(r"(?m)^[ \t]*(\d+)\.\s+", block)]
 
 
 def count_subparts(block: str) -> int:
-    return len(re.findall(r"(?m)^(?:\*\*)?\([a-e]\)", block))
+    return len(re.findall(r"(?m)^[ \t]*(?:\*\*)?\([a-e]\)", block))
+
+
+def subpart_labels(block: str) -> list[str]:
+    return re.findall(r"(?m)^[ \t]*(?:\*\*)?\(([a-e])\)", block)
 
 
 def sections(text: str, heading_pattern: str) -> list[str]:
@@ -116,11 +124,22 @@ def main() -> int:
 
         expected_frq = [[5, 4], [], [5, 5], [5], [4], [5]]
         actual_frq: list[list[int]] = []
+        question_frq_labels: list[list[list[str]]] = []
         for text in unit_texts:
             blocks = sections(text, r"^### FRQ(?: 2)?\s*$")
             actual_frq.append([count_subparts(block) for block in blocks])
+            question_frq_labels.append([subpart_labels(block) for block in blocks])
         if actual_frq != expected_frq:
             errors.append(f"FRQ question subparts {actual_frq}, expected {expected_frq}")
+
+        question_numbers: list[list[int]] = []
+        for unit, text in enumerate(unit_texts, start=1):
+            mcq_blocks = sections(text, r"^### MCQ\s*$")
+            if len(mcq_blocks) == 1:
+                numbers = numbered_question_numbers(mcq_blocks[0])
+                question_numbers.append(numbers)
+                if numbers != list(range(1, 11)):
+                    errors.append(f"Unit {unit} MCQ numbering {numbers}, expected 1..10")
 
         answer_text = module_texts[7]
         unit_answers = sections(answer_text, r"^## Unit [1-6]:.*\{-\}\s*$")
@@ -128,22 +147,39 @@ def main() -> int:
             errors.append(f"answer module has {len(unit_answers)} unit sections, expected 6")
         else:
             answer_mcq_counts: list[int] = []
+            answer_mcq_numbers: list[list[int]] = []
             answer_frq: list[list[int]] = []
+            answer_frq_labels: list[list[list[str]]] = []
             for block in unit_answers:
                 mcq_match = re.search(
                     r"(?ms)^### MCQ \{-\}\s*$.*?(?=^### |^## |\Z)", block
                 )
-                answer_mcq_counts.append(
-                    len(re.findall(r"(?m)^\s*\d+\.\s+\*\*[a-e]\*\*", mcq_match.group(0)))
-                    if mcq_match
-                    else 0
-                )
+                if mcq_match:
+                    mcq_block = mcq_match.group(0)
+                    answer_numbers = [
+                        int(value)
+                        for value in re.findall(r"(?m)^[ \t]*(\d+)\.\s+\*\*[a-e]\*\*", mcq_block)
+                    ]
+                    answer_mcq_numbers.append(answer_numbers)
+                    answer_mcq_counts.append(len(answer_numbers))
+                else:
+                    answer_mcq_numbers.append([])
+                    answer_mcq_counts.append(0)
                 frq_blocks = sections(block, r"^### FRQ(?: 2)? \{-\}\s*$")
                 answer_frq.append([count_subparts(item) for item in frq_blocks])
+                answer_frq_labels.append([subpart_labels(item) for item in frq_blocks])
             if answer_mcq_counts != [10] * 6:
                 errors.append(f"MCQ answer counts {answer_mcq_counts}, expected {[10] * 6}")
+            for unit, numbers in enumerate(answer_mcq_numbers, start=1):
+                if numbers != list(range(1, 11)):
+                    errors.append(f"Unit {unit} MCQ answer numbering {numbers}, expected 1..10")
             if answer_frq != expected_frq:
                 errors.append(f"FRQ answer subparts {answer_frq}, expected {expected_frq}")
+            if answer_frq_labels != question_frq_labels:
+                errors.append(
+                    f"FRQ question/answer labels differ: questions={question_frq_labels}, "
+                    f"answers={answer_frq_labels}"
+                )
 
         combined = "".join(module_texts)
         refs = re.findall(r"!\[[^\]]*\]\((charts/[^)]+\.png)\)", combined)
